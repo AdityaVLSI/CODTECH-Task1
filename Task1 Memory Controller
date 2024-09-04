@@ -1,0 +1,163 @@
+/* This Is Of SRAM Memory Controller Design Using Verilog.*/
+
+`timescale 1ns / 1ps
+// Module decleartion
+module sram_controller (
+    input wire clk,
+    input wire reset,
+    input wire read_req,
+    input wire write_req,
+    input wire [7:0] address,     // 8-bit address for SRAM
+    inout wire [7:0] data,        // 8-bit data bus for SRAM
+    output reg read_enable,
+    output reg write_enable,
+    output reg [7:0] sram_address,
+    inout wire [7:0] sram_data,
+    output reg ready              // Ready signal to indicate completion of operation
+);                             
+
+    // Define internal states using parameters
+    localparam IDLE = 3'b000, // Controller is wating for the result
+               READ = 3'b001, // Controller is reading data form SRAM 
+               WRITE = 3'b010,//Controller is write data to SRAM 
+               WAIT = 3'b011, // Controller wait for the read or write operation to complete
+               ERROR = 3'b100; // its show if any error is there
+
+    reg [2:0] current_state, next_state; /* There are 3-bit register that hold the current state and the next sate of the fsm 
+    the width is 3 bits bcz we have defined 5 state / each represent by 3-bit value */
+    
+     // Bidirectional data bus logic
+    assign sram_data = (write_enable) ? data : 8'bz;  // Drive data during write, otherwise high-Z
+    assign data = (read_enable) ? sram_data : 8'bz;   // Read data during read, otherwise high-Z
+
+    // Sequential logic: State transition
+    always  @(posedge clk or posedge reset) begin
+        if (reset) begin
+            current_state <= IDLE;  // controller wait for the request
+        end else begin
+            current_state <= next_state; // the next_state is depnd on the cobinational logic
+        end
+    end
+
+    // Combinational logic: Next state and output logic
+    always @*
+     begin
+        next_state = current_state;  // Next_sate is still staying in the current state till the transition condition is met
+        read_enable = 1'b0;
+        write_enable = 1'b0; // Initialization
+        ready = 1'b0;
+        sram_address = address; // The address bus is directly assigned to the i/p address
+
+        case (current_state) // When ever current_sate change this case will ouccur
+            IDLE: begin // In this case conroller check for a read_req and write_req.
+                if (read_req) begin // If read_req is high next_sate is assign to READ mode 
+                    next_state = READ;
+                end else if (write_req) begin
+                    next_state = WRITE;  // Simirally hear
+                end
+            end
+
+            READ: begin
+                read_enable = 1'b1;   /* when in the read_enable is 1 the controller then moves to the WAIT sate 
+                                           and the wait state tell that read instruction will complete and this next_sate is assign 
+                                           the sequential block where current_state<= next_state */
+                next_state = WAIT;
+            end
+
+            WRITE: begin
+                write_enable = 1'b1;  // Same write_enable is 1 WAIT sate is assgin 
+                next_state = WAIT;
+            end
+
+            WAIT: begin
+                ready = 1'b1;  // Signal that the operation is complete , tell the instruction is done again the next_state = IDLE
+                next_state = IDLE;
+            end
+
+            ERROR: begin
+                // Error handling (optional)
+                next_state = IDLE;
+            end
+
+            default: next_state = IDLE;
+        endcase
+
+
+/* Now This IS A Testbench Of Above Code To verify The SRAM Memory */
+
+`timescale 1ns / 1ps
+module sram_controller_tb;
+
+    // Testbench signals 
+    //INPUT
+    
+    reg clk;
+    reg reset;
+    reg read_req;
+    reg write_req;
+    reg [7:0] address;
+    reg [7:0] data_in; 
+    
+    // OUTPUT
+    
+    wire [7:0] data;
+    wire read_enable;
+    wire write_enable;
+    wire [7:0] sram_address;
+    wire [7:0] sram_data;
+    wire ready;
+
+    // Internal bidirectional data bus connection
+    assign data = (write_enable) ? data_in : 8'bz;
+
+    // Instantiate the SRAM controller
+    sram_controller uut (
+        .clk(clk),
+        .reset(reset),
+        .read_req(read_req),
+        .write_req(write_req),
+        .address(address),
+        .data(data),
+        .read_enable(read_enable),
+        .write_enable(write_enable),
+        .sram_address(sram_address),
+        .sram_data(sram_data),
+        .ready(ready)
+    );
+
+    // Clock generation
+    always #5 clk = ~clk;
+
+    initial begin  // This block executes once
+        // Initialize signals
+        clk = 0;
+        reset = 1;
+        read_req = 0;
+        write_req = 0;
+        address = 8'b00000000;
+        data_in = 8'b00000000;
+
+        // Reset the controller
+        #10 reset = 0;   // #10 10 time unit delay
+
+        // Test write operation
+        #10 write_req = 1;     /* After 10 time units, the testbench initiates a write operation by setting write_req high. 
+                                  It also sets the address to 1 and the data_in to 10101010 (binary).*/
+          address = 8'b00000001;
+          data_in = 8'b10101010;
+        
+        #20 write_req = 0;
+
+        // Test read operation
+        #10 read_req = 1;   // read request is on 
+        
+        #20 read_req = 0;
+
+        // Wait a bit and then finish
+        #50 $finish;
+    end
+
+   
+
+endmodule
+
