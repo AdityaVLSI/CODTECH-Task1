@@ -69,5 +69,4 @@ The primary objective of the sram_controller module is to manage read and write 
   The sram_controller project is designed to manage read and write operations for an SRAM module using Verilog HDL. It employs a finite state machine (FSM) to control the sequencing of operations, ensuring that the SRAM is accessed correctly. The FSM transitions through states (IDLE, READ, WRITE, WAIT, ERROR) based on input requests and manages control signals like read_enable, write_enable, and ready. The design uses both sequential and combinational logic to handle state transitions and data flow. Bidirectional data buses are utilized for read and write operations. The project ensures proper synchronization with the clock and handles asynchronous resets. Overall, it demonstrates effective digital design and control of memory operations.
 
 
-
-
+![Screenshot (32)](https://github.com/user-attachments/assets/b6effd90-8c59-45aa-8354-619269372fc5)
