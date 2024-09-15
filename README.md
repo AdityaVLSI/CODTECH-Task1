@@ -11,66 +11,81 @@ Duration: AUGUST TO SEPTEMBER 2024
 Mentor: Neela Santhosh Kumar
 
 
-Overview of the Project
+## Overview of the Project ##
 
-## Project: DESIGN MEMORY CONTROLLER USING VERILOG
+## Project: DESIGN SRAM MEMORY CONTROLLER USING VERILOG 
 
-## Objective ##
+## Objective.
 
-The primary objective of the sram_controller module is to manage read and write operations to an SRAM (Static Random Access Memory). The module handles the control signals required for these operations and ensures proper timing and sequencing by using a finite state machine (FSM). It controls data flow between the SRAM and the system based on read and write requests.
+The objective of this project is to design and implement an SRAM memory controller using Verilog, capable of managing read and write operations efficiently. The controller will generate the necessary control signals such as Write Enable, Output Enable, Chip Enable, and Byte Selection to ensure proper communication with the SRAM. A Finite State Machine (FSM) will be integrated to manage different operational states, including idle, read, and write modes. The project will involve simulating the SRAM controller using testbenches to validate its functionality and performance under various conditions. Additionally, the design will be optimized for FPGA implementation, focusing on resource efficiency and performance. Through this project, the goal is to gain an in-depth understanding of SRAM memory timing, addressing, and controller design, followed by verification through simulation and timing analysis to meet functional specifications.
 
-## Key Activities and Technologies Used
-    1)  Finite State Machine (FSM):
+## Key Activities  ##
 
-         Purpose: Manages the controller's states and transitions to handle different phases of read and write operations.
-         States Defined:
-               IDLE: The default state where the controller waits for read or write requests.
-               READ: The state where the controller prepares to read data from the SRAM.
-               WRITE: The state where the controller prepares to write data to the SRAM.
-               WAIT: A state to allow time for the SRAM operation to complete.
-               ERROR: An optional state to handle errors (though not used in this design).
-       
-      2) Sequential Logic :
-
-             Clock Edge Triggered: Uses always @(posedge clk or posedge reset) to update the current_state based on the next_state or reset the FSM to the IDLE state.
-           
-      3) Combinational Logic:
-
-              State Transitions and Outputs: Uses always @* to determine the next_state based on the current_state and input signals.
-            It also sets control signals (read_enable, write_enable, ready) and assigns 
-            the sram_address.
-           
-        4) Bidirectional Data Bus:
-
-               Data Assignment:
-                     Write Operation: When write_enable is high, the sram_data line is driven by the data bus.
-                     Read Operation: When read_enable is high, the data bus is driven by the sram_data line.
-                     High-Z State: When neither read nor write operations are active, the sram_data and data buses are in high-impedance (high-Z) state.
-           
-        5) Signal Handling:
-
-             Control Signals:
-                  read_enable: Activates the read operation on the SRAM.
-                  write_enable: Activates the write operation on the SRAM.
-                  ready: Indicates that the SRAM operation has completed and the system can proceed with the next operation.
-
-## Technology Used
-
-       1. Hardware Description Language (HDL)
-            Verilog: The code is written in Verilog, a hardware description language used for modeling electronic systems.
-            Verilog allows for the description of digital circuits and systems at various levels of abstraction, 
-            from high-level functional descriptions to low-level gate-level designs.
-      2. Finite State Machine (FSM)
-           FSM Concept: The sram_controller module uses a finite state machine to manage the sequence of operations. 
-           An FSM is a computational model consisting of states, transitions, and actions that helps in designing sequential logic circuits.
-           In this case, the FSM controls the states of the SRAM controller (IDLE, READ, WRITE, WAIT, ERROR) and transitions between them based on input signals.
+1. Requirement Analysis and Specification Development: Define the functional requirements of the SRAM memory controller, including memory size, addressing, read/write operations, and control signal requirements.
 
 
-  The sram_controller project is designed to manage read and write operations for an SRAM module using Verilog HDL. It employs a finite state machine (FSM) to control the sequencing of operations, ensuring that the SRAM is accessed correctly. The FSM transitions through states (IDLE, READ, WRITE, WAIT, ERROR) based on input requests and manages control signals like read_enable, write_enable, and ready. The design uses both sequential and combinational logic to handle state transitions and data flow. Bidirectional data buses are utilized for read and write operations. The project ensures proper synchronization with the clock and handles asynchronous resets. Overall, it demonstrates effective digital design and control of memory operations.
+2. Design of the SRAM Controller: Develop the Verilog code for the SRAM controller, including logic for generating control signals like Write Enable (WE), Output Enable (OE), Chip Enable (CE), and byte selection signals (Lower and Upper Byte).
 
+
+3. Implementation of FSM (Finite State Machine): Design and implement a state machine to control the operational states of the controller, including idle, read, and write states.
+
+
+4. Verilog Testbench Development: Create a testbench in Verilog to simulate various memory access scenarios (read/write) and verify the controller’s functionality.
+
+
+5. Simulation and Verification: Simulate the SRAM controller using tools like Icarus Verilog, ModelSim, or Vivado to ensure correct functionality and timing. Verify the design through different test cases.
+
+
+6. Synthesis and FPGA Implementation: Synthesize the design using FPGA development tools such as Xilinx Vivado or Intel Quartus. Map the SRAM controller onto an FPGA board (if available) and perform timing analysis and resource utilization checks.
+
+
+7. Debugging and Optimization: Identify and correct any issues that arise during simulation or synthesis. Optimize the design for better performance and lower resource utilization.
+
+
+8. Documentation and Report Preparation: Document the design process, simulation results, and performance analysis. Prepare a project report detailing the implementation, testing, and outcomes.
+
+
+
+These activities cover the full lifecycle of designing, simulating, and verifying the SRAM controller, ensuring it meets the project requirements and can be implemented on FPGA hardware.
+
+
+## Technology Used ##
+
+1. Verilog HDL: For designing and describing the SRAM memory controller and its functionality.
+
+
+2. FPGA Development Tools: Tools such as Xilinx Vivado or Intel Quartus for synthesizing and implementing the design on FPGA hardware.
+
+
+3. Simulation Tools: Software like ModelSim, Icarus Verilog, or Vivado for simulating the SRAM controller and verifying its functionality.
+
+
+4. FPGA Hardware (Optional): FPGA development boards for physical implementation and testing of the SRAM controller, if available.
+
+
+5. Testbenches: Verilog-based testbenches for simulating various read/write scenarios and validating the controller’s operation.
+
+
+## Summary
+
+This project focuses on designing and implementing an SRAM memory controller using Verilog HDL. The primary goal is to create a functional controller that efficiently manages both read and write operations for SRAM, including generating essential control signals such as Write Enable (WE), Output Enable (OE), Chip Enable (CE), and Byte Selection signals. The design incorporates a Finite State Machine (FSM) to handle various operational states, including idle, read, and write modes. The project involves developing the Verilog code for the controller, creating testbenches for simulation, and validating the functionality using simulation tools like ModelSim or Vivado. Additionally, the design will be synthesized and optimized for FPGA implementation using tools such as Xilinx Vivado or Intel Quartus. The project aims to provide a comprehensive understanding of SRAM memory operations and FPGA-based system design while ensuring the SRAM controller performs efficiently and accurately.
+
+
+
+# Waveform 
 
 ![Screenshot (32)](https://github.com/user-attachments/assets/b6effd90-8c59-45aa-8354-619269372fc5) 
+
+
+# RTL Design 
+
 ![Screenshot (33)](https://github.com/user-attachments/assets/7c8d228e-e59a-4e10-818e-c4736d790d23) 
+
+
+
+# Synthesis
+
+
 ![Screenshot (34)](https://github.com/user-attachments/assets/616d8ebc-354f-485f-81a2-5d100f3615b3)
 
 
