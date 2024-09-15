@@ -1,4 +1,8 @@
-/* This Is Of SRAM Memory Controller Design Using Verilog.*/
+/* This Is Of SRAM Memory Controller Design Using Verilog.
+    Name : Aditya Singh 
+    Project Title: Design SRAM Memory Controller 
+    Date : 4 September 2024
+ ********************************  */
 
 `timescale 1ns / 1ps
 // Module decleartion
